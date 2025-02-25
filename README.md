@@ -17,9 +17,9 @@
 <hr>
   <h1 align="center">✦ Introducing to 👨‍💻AI ResumeXpert Analyst 🤖 ✦</h1>
   <img src="./LOGO.png" width="100px" />
-  <br>
-✦🌟📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻!🧠 ✦</strong></a><br><br>
-	<a href=https://ai-resumexpert-analyst.streamlit.app/><strong>🌍👨‍💻🚨 **Live Demo APP & Try It Yourself!**<br><br>
+  <br><strong>
+✦🌟📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻!🧠 ✦</strong><br><br>
+	<a href=https://ai-resumexpert-analyst.streamlit.app/><strong></a>🌍👨‍💻🚨 **Live Demo APP & Try It Yourself!**<br><br>
 
   
   `## 🔥 **Project Overview**  
