@@ -19,11 +19,13 @@ from reportlab.lib.pagesizes import letter
 import google.generativeai as genai
 import webbrowser
 
-# Configure Gemini API
-API_KEY = os.getenv("GEMINI_API_KEY")
-if not API_KEY:
-    st.error("⚠ Gemini API Key is missing. Set it in environment variables!")
-    st.stop()
+# Gemini API Key ko load karne ka sahi tarika (Streamlit Cloud ke liye)
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+
+# Check if key is missing
+if not GEMINI_API_KEY:
+    st.error("⚠ GEMINI API Key is missing. Set it in Streamlit Secrets!")
+
 
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel("gemini-pro")
