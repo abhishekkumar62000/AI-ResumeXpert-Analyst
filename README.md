@@ -31,7 +31,7 @@
 ✅ **Generate AI-based cover letters & prepare for interviews**  
 ✅ **100% Open-Source! Contribute, improve, and expand features!**. `<hr>
 # 👨‍💻AI ResumeXpert Analyst 🤖
-  <img src="./AI.png" width="500px"/>
+  <img src="./image.png" width="400px"/>
 
 ---
 
