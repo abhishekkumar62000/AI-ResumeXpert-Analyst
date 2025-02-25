@@ -9,6 +9,7 @@ import seaborn as sns
 import nltk
 import spacy
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import FAISS
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
 from PyPDF2 import PdfReader
