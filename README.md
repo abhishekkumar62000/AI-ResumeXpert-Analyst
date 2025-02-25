@@ -19,7 +19,7 @@
 <hr>
   <h1 align="center">✦ Introducing to 👨‍💻AI ResumeXpert Analyst 🤖 ✦</h1>
   <img src="./LOGO.png" width="100px" />
-  <br><a href="https://mindgraphx.streamlit.app/"><strong>✦🌟📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻!🧠 ✦</strong></a><br><br>
+  <br><a href=https://ai-resumexpert-analyst.streamlit.app/><strong>✦🌟📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻!🧠 ✦</strong></a><br><br>
   
   `## 🔥 **Project Overview**  
 🌟 AI ResumeXpert Analyst is a **cutting-edge AI-powered platform** that helps job seekers **optimize their resumes**, improve **ATS compatibility**, and get **career insights**. Whether you're a **job seeker, recruiter, or developer**, this tool **analyzes resumes, ranks them, and offers AI-generated improvements**!  
@@ -37,10 +37,6 @@
   <img src="https://yourimageurl.com/banner.png" alt="MindGraphX Logo" width="600">
 </p>
 
-# 👨‍💻 AI ResumeXpert Analyst 🤖  
-🚀 **An Open-Source AI-Powered Resume Analysis & Career Guidance Platform**  
-
-![AI ResumeXpert Analyst Banner](https://your-banner-image-link-here.com)  
 
 ---
 
