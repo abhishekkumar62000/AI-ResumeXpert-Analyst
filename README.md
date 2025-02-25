@@ -19,7 +19,7 @@
   <img src="./LOGO.png" width="100px" />
   <br>
 ✦🌟📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻!🧠 ✦</strong></a><br><br>
-	<a href=https://ai-resumexpert-analyst.streamlit.app/><strong>🌍👨‍💻🚨 **Live Demo APP & Try It Yourself!**
+	<a href=https://ai-resumexpert-analyst.streamlit.app/><strong>🌍👨‍💻🚨 **Live Demo APP & Try It Yourself!**<br><br>
 
   
   `## 🔥 **Project Overview**  
