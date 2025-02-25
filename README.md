@@ -4,8 +4,6 @@
 
 
 
-
-
 <p align="center">
   <img src="https://img.shields.io/github/repo-size/codeaashu/Word-Sprint" alt="GitHub repo size">
   <img src="https://img.shields.io/github/stars/codeaashu/Word-Sprint?style=social" alt="GitHub stars">
@@ -19,8 +17,10 @@
 <hr>
   <h1 align="center">✦ Introducing to 👨‍💻AI ResumeXpert Analyst 🤖 ✦</h1>
   <img src="./LOGO.png" width="100px" />
-  <br><a href=https://ai-resumexpert-analyst.streamlit.app/><strong>🌍👨‍💻🚨 **Live Demo APP & Try It Yourself!**
-	  ✦🌟📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻!🧠 ✦</strong></a><br><br>
+  <br>
+✦🌟📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻!🧠 ✦</strong></a><br><br>
+	<a href=https://ai-resumexpert-analyst.streamlit.app/><strong>🌍👨‍💻🚨 **Live Demo APP & Try It Yourself!**
+
   
   `## 🔥 **Project Overview**  
 🌟 AI ResumeXpert Analyst is a **cutting-edge AI-powered platform** that helps job seekers **optimize their resumes**, improve **ATS compatibility**, and get **career insights**. Whether you're a **job seeker, recruiter, or developer**, this tool **analyzes resumes, ranks them, and offers AI-generated improvements**!  
