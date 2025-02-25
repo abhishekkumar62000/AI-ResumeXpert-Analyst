@@ -10,8 +10,7 @@ import nltk
 import spacy
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain.vectorstores import FAISS
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from PyPDF2 import PdfReader
 from docx import Document
 from fpdf import FPDF
@@ -20,17 +19,12 @@ from reportlab.lib.pagesizes import letter
 import google.generativeai as genai
 import webbrowser
 
-import streamlit as st
-import google.generativeai as genai
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]  # ✅ Correctly fetching API key
 
-# Streamlit Secrets se API Key load karo
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
-
-# Check if API key exists
 if not GEMINI_API_KEY:
     st.error("⚠ GEMINI API Key is missing. Set it in Streamlit Secrets!")
 else:
-    genai.configure(api_key=GEMINI_API_KEY)  # ✅ Sahi tarika
+    genai.configure(api_key=GEMINI_API_KEY)  # ✅ Correct argument name
 
 
 genai.configure(gemini_api_key=GEMINI_API_KEY)
