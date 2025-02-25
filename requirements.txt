@@ -1,14 +1,14 @@
 streamlit
 requests
 langchain
+langchain-community  # ✅ Fix for FAISS
 faiss-cpu
 python-docx
 sentence-transformers
 pymupdf
 PyPDF2
 huggingface-hub
-python-docx
-google-generativeai  # ✅ Gemini ke liye ye add karo
+google-generativeai
 numpy
 pandas
 matplotlib
