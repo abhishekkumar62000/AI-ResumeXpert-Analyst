@@ -1,13 +1,14 @@
 streamlit
 requests
 langchain
-langchain-community
 faiss-cpu
 python-docx
 sentence-transformers
-pymupdf  # (For PDF Editing)
+pymupdf
 PyPDF2
 huggingface-hub
+python-docx
+google-generativeai  # ✅ Gemini ke liye ye add karo
 numpy
 pandas
 matplotlib
