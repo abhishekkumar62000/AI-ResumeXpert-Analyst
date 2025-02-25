@@ -1,14 +1,13 @@
 streamlit
 requests
 langchain
+langchain-community
 faiss-cpu
 python-docx
 sentence-transformers
 pymupdf  # (For PDF Editing)
 PyPDF2
 huggingface-hub
-python-docx
-google-generativeai
 numpy
 pandas
 matplotlib
