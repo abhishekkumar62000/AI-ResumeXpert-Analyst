@@ -27,8 +27,6 @@ if not GEMINI_API_KEY:
 else:
     genai.configure(api_key=GEMINI_API_KEY)  # ✅ Correct argument name
 
-
-genai.configure(gemini_api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel("gemini-pro")
 
 def chat_with_gemini(prompt):
