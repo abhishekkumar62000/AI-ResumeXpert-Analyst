@@ -19,7 +19,8 @@ from reportlab.lib.pagesizes import letter
 import google.generativeai as genai
 import webbrowser
 
-GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]  # ✅ Correctly fetching API key
+# Fetch API key from Streamlit Secrets
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
 if not GEMINI_API_KEY:
     st.error("⚠ GEMINI API Key is missing. Set it in Streamlit Secrets!")
@@ -33,6 +34,14 @@ model = genai.GenerativeModel("gemini-pro")
 def chat_with_gemini(prompt):
     response = model.generate_content(prompt)
     return response.text if response else "No response received."
+
+import asyncio
+
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.run(asyncio.sleep(0))  # ✅ Ensure a running event loop
+
 
 # UI Improvements
 st.set_page_config(page_title="AI Resume Reviewer", page_icon="📄", layout="wide")
