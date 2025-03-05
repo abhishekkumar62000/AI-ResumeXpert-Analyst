@@ -22,17 +22,28 @@ import webbrowser
 # Fetch API key from Streamlit Secrets
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
+# Ensure the API key is set
 if not GEMINI_API_KEY:
     st.error("⚠ GEMINI API Key is missing. Set it in Streamlit Secrets!")
 else:
-    genai.configure(api_key=GEMINI_API_KEY)  # ✅ Correct argument name
+    genai.configure(api_key=GEMINI_API_KEY)
 
-model = genai.GenerativeModel("gemini-pro")
+# Verify model name and ensure it is accessible
+try:
+    model = genai.GenerativeModel("gemini-pro")
+except google.api_core.exceptions.NotFound as e:
+    st.error("⚠ Model not found. Please check the model name and API key.")
+    st.stop()
 
 def chat_with_gemini(prompt):
-    response = model.generate_content(prompt)
-    return response.text if response else "No response received."
+    try:
+        response = model.generate_content(prompt)
+        return response.text if response else "No response received."
+    except google.api_core.exceptions.NotFound as e:
+        st.error("⚠ Model not found. Please check the model name and API key.")
+        return "Model not found."
 
+# Your other code remains the same
 import asyncio
 
 try:
