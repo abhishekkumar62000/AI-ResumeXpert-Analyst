@@ -36,6 +36,15 @@ try:
 except google.api_core.exceptions.NotFound as e:
     st.error("⚠ Model not found. Please check the model name and API key.")
     st.stop()
+except google.api_core.exceptions.PermissionDenied as e:
+    st.error("⚠ Permission denied. Please check your API key permissions.")
+    st.stop()
+except google.api_core.exceptions.InvalidArgument as e:
+    st.error("⚠ Invalid argument. Please check the model name and API key.")
+    st.stop()
+except Exception as e:
+    st.error(f"⚠ An unexpected error occurred: {e}")
+    st.stop()
 
 def chat_with_gemini(prompt):
     try:
@@ -520,3 +529,5 @@ with tab12:
         if st.button("📚 Get Soft Skills Insights"):
             soft_skills_analysis = chat_with_gemini(soft_skills_prompt)
             st.write(soft_skills_analysis)
+    else:
+        st.warning("Please upload a resume to analyze soft skills.")
