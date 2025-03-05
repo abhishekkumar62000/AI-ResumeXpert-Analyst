@@ -28,9 +28,11 @@ if not GEMINI_API_KEY:
 else:
     genai.configure(api_key=GEMINI_API_KEY)
 
+import google.api_core.exceptions  # Add this import
+
 # Verify model name and ensure it is accessible
 try:
-    model = genai.GenerativeModel("gemini-pro")
+    model = genai.GenerativeModel("correct-model-name")  # Replace with the correct model name
 except google.api_core.exceptions.NotFound as e:
     st.error("⚠ Model not found. Please check the model name and API key.")
     st.stop()
