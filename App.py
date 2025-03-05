@@ -30,9 +30,9 @@ else:
 
 import google.api_core.exceptions  # Add this import
 
-# Verify model name and ensure it is accessible
+# Ensure the correct model name
 try:
-    model = genai.GenerativeModel("correct-model-name")  # Replace with the correct model name
+    model = genai.GenerativeModel("actual-model-name")  # Replace with the correct model name
 except google.api_core.exceptions.NotFound as e:
     st.error("⚠ Model not found. Please check the model name and API key.")
     st.stop()
