@@ -30,9 +30,9 @@ else:
 
 import google.api_core.exceptions  # Add this import
 
-# Ensure the correct model name
+# Verify model name and ensure it is accessible
 try:
-    model = genai.GenerativeModel("actual-model-name")  # Replace with the correct model name
+    model = genai.GenerativeModel("correct-model-name")  # Replace with the correct model name
 except google.api_core.exceptions.NotFound as e:
     st.error("⚠ Model not found. Please check the model name and API key.")
     st.stop()
@@ -61,7 +61,6 @@ try:
     asyncio.get_running_loop()
 except RuntimeError:
     asyncio.run(asyncio.sleep(0))  # ✅ Ensure a running event loop
-
 
 # UI Improvements
 st.set_page_config(page_title="AI Resume Reviewer", page_icon="📄", layout="wide")
@@ -99,7 +98,6 @@ with st.sidebar:
         "✉️ AI Cover Letter Generator",
         "🎤 AI Mock Interviews"
     ])
-
 
     st.markdown("👨👨‍💻Developer:- Abhishek❤️Yadav")
     
@@ -448,6 +446,7 @@ with tab9:
 
             salary_and_jobs = get_salary_and_jobs(resume_text)
             st.write(salary_and_jobs)
+
 
 # Tab 10: Interactive Resume Q&A
 with tab10:
