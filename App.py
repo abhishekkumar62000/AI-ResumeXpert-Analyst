@@ -40,7 +40,7 @@ except RuntimeError:
 # Function to handle API calls
 def chat_with_gemini(prompt):
     try:
-        response = genai.chat(prompt)
+        response = genai.generate(prompt=prompt)  # Use the correct method for generating responses
         return response
     except google.api_core.exceptions.GoogleAPIError as e:
         st.error(f"API Error: {e}")
@@ -427,7 +427,6 @@ with tab10:
                 response = chat_with_gemini(prompt)
                 st.write("💡 *AI Response:*")
                 st.write(response)
-
 
 # Tab 11: Personalized Job Alerts
 with tab11:
