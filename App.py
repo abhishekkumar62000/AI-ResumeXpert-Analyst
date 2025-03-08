@@ -1,23 +1,13 @@
 # Import Important Libraries
 import streamlit as st
-import os
-import faiss
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import nltk
-import spacy
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from PyPDF2 import PdfReader
 from docx import Document
 from fpdf import FPDF
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import google.generativeai as genai
-import webbrowser
 import google.api_core.exceptions
 
 # Fetch API key from Streamlit Secrets
@@ -174,6 +164,23 @@ with tab2:
     job_desc = st.text_area("📌 Paste Job Description Here:")
     if job_desc:
         st.write("🔍 Analyzing job fit...")
+        # Function to match job description with resume
+        def match_job_description(resume_text, job_desc):
+            prompt = f"""
+            You are an AI Job Fit Analyzer. Based on the resume and job description below, analyze the fit:
+        
+            ✅ *Skills Match*: How well do the resume skills align with the job requirements?
+            ✅ *Experience Match*: How relevant is the candidate's experience to the job role?
+            ✅ *Overall Fit*: Provide a score out of 100 and a brief analysis.
+        
+            Resume:
+            {resume_text}
+        
+            Job Description:
+            {job_desc}
+            """
+            return chat_with_gemini(prompt)
+        
         job_fit_feedback = match_job_description(resume_text, job_desc)
         st.subheader("📊 Job Fit Analysis")
         st.write(job_fit_feedback)
@@ -444,7 +451,6 @@ with tab11:
             indeed_url = f"https://www.indeed.com/jobs?q={job_title.replace(' ', '+')}&l={location.replace(' ', '+')}"
             linkedin_url = f"https://www.linkedin.com/jobs/search?keywords={job_title.replace(' ', '%20')}&location={location.replace(' ', '%20')}"
             naukri_url = f"https://www.naukri.com/{job_title.replace(' ', '-')}-jobs-in-{location.replace(' ', '-')}"
-
             google_jobs_url = f"https://www.google.com/search?q={job_title.replace(' ', '+')}+jobs+in+{location.replace(' ', '+')}"
 
             # Display clickable job links
