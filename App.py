@@ -35,7 +35,7 @@ except RuntimeError:
 # Function to handle API calls
 def chat_with_gemini(prompt):
     try:
-        response = genai.generate(prompt=prompt)  # Use the correct method for generating responses
+        response = genai.generate_text(prompt=prompt)  # Use the correct method for generating responses
         return response
     except google.api_core.exceptions.GoogleAPIError as e:
         st.error(f"API Error: {e}")
