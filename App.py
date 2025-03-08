@@ -29,29 +29,7 @@ if not GEMINI_API_KEY:
 else:
     genai.configure(api_key=GEMINI_API_KEY)
 
-# Verify model name and ensure it is accessible
-try:
-    model = genai.GenerativeModel("correct-model-name")  # Replace with the correct model name
-except google.api_core.exceptions.NotFound as e:
-    st.error("⚠ Model not found. Please check the model name and API key.")
-    st.stop()
-except google.api_core.exceptions.PermissionDenied as e:
-    st.error("⚠ Permission denied. Please check your API key permissions.")
-    st.stop()
-except google.api_core.exceptions.InvalidArgument as e:
-    st.error("⚠ Invalid argument. Please check the model name and API key.")
-    st.stop()
-except Exception as e:
-    st.error(f"⚠ An unexpected error occurred: {e}")
-    st.stop()
 
-def chat_with_gemini(prompt):
-    try:
-        response = model.generate_content(prompt)
-        return response.text if response else "No response received."
-    except google.api_core.exceptions.NotFound as e:
-        st.error("⚠ Model not found. Please check the model name and API key.")
-        return "Model not found."
 
 # Your other code remains the same
 import asyncio
