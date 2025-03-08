@@ -35,7 +35,7 @@ except RuntimeError:
 # Function to handle API calls
 def chat_with_gemini(prompt):
     try:
-        response = genai.generate_text(prompt=prompt)  # Use the correct method for generating responses
+        response = genai.generate(prompt=prompt)  # Use the correct method for generating responses
         return response
     except google.api_core.exceptions.GoogleAPIError as e:
         st.error(f"API Error: {e}")
@@ -448,7 +448,7 @@ with tab11:
     # Input fields for user preferences
     job_title = st.text_input("🎯 Enter Job Title (e.g., Data Scientist, Software Engineer)")
     location = st.text_input("📍 Preferred Location (e.g., Remote, New York, Bangalore)")
-    
+
     if st.button("🔍 Find Jobs Now"):
         if job_title and location:
             st.success(f"🔗 Here are job links for **{job_title}** in **{location}**:")
