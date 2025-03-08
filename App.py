@@ -1,4 +1,4 @@
-#Import Important Library
+# Import Important Library
 import streamlit as st
 import os
 import faiss
@@ -18,6 +18,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import google.generativeai as genai
 import webbrowser
+import google.api_core.exceptions  # Add this import
 
 # Fetch API key from Streamlit Secrets
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
@@ -27,8 +28,6 @@ if not GEMINI_API_KEY:
     st.error("⚠ GEMINI API Key is missing. Set it in Streamlit Secrets!")
 else:
     genai.configure(api_key=GEMINI_API_KEY)
-
-import google.api_core.exceptions  # Add this import
 
 # Verify model name and ensure it is accessible
 try:
@@ -301,7 +300,7 @@ with tab5:
     if uploaded_files:
         resume_texts = []
         file_names = []
-        
+
         for file in uploaded_files:
             text = extract_text(file)  # Function to extract text from PDF/DOCX
             if text.startswith("❌"):  # Error handling
@@ -313,7 +312,7 @@ with tab5:
         if len(resume_texts) > 0:
             if st.button("🚀 Rank Resumes"):  # Button to rank resumes
                 ranked_resumes = []
-                
+
                 for i, text in enumerate(resume_texts):
                     rank_prompt = f"""
                     You are an AI Resume Evaluator. Assess the following resume based on:
@@ -442,10 +441,7 @@ with tab9:
                 Resume:
                 {resume_text}
                 """
-                return chat_with_gemini(prompt)
-
-            salary_and_jobs = get_salary_and_jobs(resume_text)
-            st.write(salary_and_jobs)
+                return
 
 
 # Tab 10: Interactive Resume Q&A
