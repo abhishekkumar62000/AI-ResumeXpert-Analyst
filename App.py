@@ -1,4 +1,4 @@
-# Import Important Library
+# Import Important Libraries
 import streamlit as st
 import os
 import faiss
@@ -18,7 +18,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import google.generativeai as genai
 import webbrowser
-import google.api_core.exceptions  # Add this import
+import google.api_core.exceptions
 
 # Fetch API key from Streamlit Secrets
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
@@ -29,9 +29,7 @@ if not GEMINI_API_KEY:
 else:
     genai.configure(api_key=GEMINI_API_KEY)
 
-
-
-# Your other code remains the same
+# Utility Imports
 import asyncio
 
 try:
@@ -39,51 +37,16 @@ try:
 except RuntimeError:
     asyncio.run(asyncio.sleep(0))  # ✅ Ensure a running event loop
 
-# UI Improvements
-st.set_page_config(page_title="AI Resume Reviewer", page_icon="📄", layout="wide")
-st.title("🚀AI ResumeXpert Analyst 🤖")
-st.markdown("Upload your resume to get detailed AI feedback, ATS analysis, and job match insights!🧠")
-st.caption("📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻")
-
-AI_path = "AI.png"  # Ensure this file is in the same directory as your script
-try:
-    st.sidebar.image(AI_path)
-except FileNotFoundError:
-    st.sidebar.warning("AI.png file not found. Please check the file path.")
-
-image_path = "image.png"  # Ensure this file is in the same directory as your script
-try:
-    st.sidebar.image(image_path)
-except FileNotFoundError:
-    st.sidebar.warning("image.png file not found. Please check the file path.")
-
-# Sidebar Navigation
-with st.sidebar:
-    st.header("⚙️ App Features")
-
-    tab_selection = st.radio("Select a Feature:", [
-        "📄 Resume Analysis",
-        "📊 ATS Score & Fixes",
-        "💼 Job Fit Analysis",
-        "🚀 AI Project Suggestions",
-        "💡 Best Career Path",
-        "🛠️ Missing Skills & Learning Guide",
-        "🎓 Certifications & Courses",
-        "💰 Expected Salaries & Job Roles",
-        "📊 AI Resume Ranking",
-        "🔍 Personalized Job Alerts",
-        "✉️ AI Cover Letter Generator",
-        "🎤 AI Mock Interviews"
-    ])
-
-    st.markdown("👨👨‍💻Developer:- Abhishek❤️Yadav")
-    
-    developer_path = "my.jpg"  # Ensure this file is in the same directory as your script
+# Function to handle API calls
+def chat_with_gemini(prompt):
     try:
-        st.sidebar.image(developer_path)
-    except FileNotFoundError:
-        st.sidebar.warning("my.jpg file not found. Please check the file path.")
+        response = genai.chat(prompt)
+        return response
+    except google.api_core.exceptions.GoogleAPIError as e:
+        st.error(f"API Error: {e}")
+        return None
 
+# Function to extract text from uploaded files
 def extract_text(file):
     if file.name.endswith(".pdf"):
         pdf_reader = PdfReader(file)
@@ -94,6 +57,7 @@ def extract_text(file):
     else:
         return "❌ Unsupported file format. Upload a PDF or DOCX."
 
+# Function to analyze resume
 def analyze_resume(text):
     prompt = f"""
     You are an expert AI Resume Reviewer. Analyze the following resume thoroughly and provide structured insights on:
@@ -109,23 +73,7 @@ def analyze_resume(text):
     """
     return chat_with_gemini(prompt)
 
-def match_job_description(resume_text, job_desc):
-    prompt = f"""
-    You are an AI Job Fit Analyzer. Compare the given resume with the provided job description and generate a structured report:
-    
-    ✅ *Matching Skills:* Identify skills in the resume that match the job description.
-    ❌ *Missing Skills:* Highlight missing key skills that the candidate needs to acquire.
-    📊 *Fit Percentage:* Provide a percentage match score based on skillset, experience, and qualifications.
-    🏆 *Final Verdict:* Clearly state whether the candidate is a "Good Fit" or "Needs Improvement" with reasons.
-    
-    Resume:
-    {resume_text}
-    
-    Job Description:
-    {job_desc}
-    """
-    return chat_with_gemini(prompt)
-
+# Your other code remains the same
 def get_resume_score(resume_text):
     prompt = f"""
     As an AI Resume Scorer, evaluate the resume across different factors and provide a structured breakdown:
@@ -165,10 +113,40 @@ def create_pdf(text, filename="Optimized_Resume.pdf"):
     c.save()
     return filename
 
-# Create Section-wise Tabs
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["📂 Upload Resume", "📊 Job Match Analysis", "🚀 AI Project Suggestions", "🤷‍♂ ATS Score Checker", "📊 AI-Powered Resume Ranking"])
+# UI Improvements
+st.set_page_config(page_title="AI Resume Reviewer", page_icon="📄", layout="wide")
+st.title("🚀AI ResumeXpert Analyst 🤖")
+st.markdown("Upload your resume to get detailed AI feedback, ATS analysis, and job match insights!🧠")
+st.caption("📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻")
+
+# Sidebar Navigation
+with st.sidebar:
+    st.header("⚙️ App Features")
+    tab_selection = st.radio("Select a Feature:", [
+        "📄 Resume Analysis",
+        "📊 ATS Score & Fixes",
+        "💼 Job Fit Analysis",
+        "🚀 AI Project Suggestions",
+        "💡 Best Career Path",
+        "🛠️ Missing Skills & Learning Guide",
+        "🎓 Certifications & Courses",
+        "💰 Expected Salaries & Job Roles",
+        "📊 AI Resume Ranking",
+        "🔍 Personalized Job Alerts",
+        "✉️ AI Cover Letter Generator",
+        "🎤 AI Mock Interviews"
+    ])
+    st.markdown("👨👨‍💻Developer:- Abhishek❤️Yadav")
+
+    developer_path = "my.jpg"  # Ensure this file is in the same directory as your script
+    try:
+        st.sidebar.image(developer_path)
+    except FileNotFoundError:
+        st.sidebar.warning("my.jpg file not found. Please check the file path.")
 
 # Tab 1: Resume Upload and Analysis
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["📂 Upload Resume", "📊 Job Match Analysis", "🚀 AI Project Suggestions", "🤷‍♂ ATS Score Checker", "📊 AI-Powered Resume Ranking"])
+
 with tab1:
     uploaded_file = st.file_uploader("Upload Resume (PDF/DOCX)", type=["pdf", "docx"])
     if uploaded_file:
@@ -210,7 +188,6 @@ def suggest_projects(resume_text):
     *Advanced Level (For Experts)*: 5 complex projects showcasing deep skills.  
     
     🔹 *For Each Project:* Provide a *brief description* and the *required tech stack (tools, frameworks, technologies).*  
-    🔹 *Make sure the projects align with the user's skills, experience, and domain.*  
     
     Resume:
     {resume_text}
@@ -419,8 +396,10 @@ with tab9:
                 Resume:
                 {resume_text}
                 """
-                return
+                return chat_with_gemini(prompt)
 
+            salary_and_job_insights = get_salary_and_jobs(resume_text)
+            st.write(salary_and_job_insights)
 
 # Tab 10: Interactive Resume Q&A
 with tab10:
@@ -448,6 +427,7 @@ with tab10:
                 response = chat_with_gemini(prompt)
                 st.write("💡 *AI Response:*")
                 st.write(response)
+
 
 # Tab 11: Personalized Job Alerts
 with tab11:
