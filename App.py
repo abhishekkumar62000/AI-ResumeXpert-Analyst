@@ -9,6 +9,11 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import google.generativeai as genai
 import google.api_core.exceptions
+import logging
+import webbrowser  # Add this import
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 # Fetch API key from Streamlit Secrets
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
@@ -30,10 +35,11 @@ except RuntimeError:
 # Function to handle API calls
 def chat_with_gemini(prompt):
     try:
-        response = genai.generate(prompt=prompt)  # Use the correct method for generating responses
+        response = genai.generate_text(prompt=prompt)  # Use the correct method for generating responses
         return response
     except google.api_core.exceptions.GoogleAPIError as e:
         st.error(f"API Error: {e}")
+        logging.error(f"API Error: {e}")
         return None
 
 # Function to extract text from uploaded files
