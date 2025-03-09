@@ -1,19 +1,23 @@
-# Import Important Libraries
+#Import Important Library
 import streamlit as st
+import os
+import faiss
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import nltk
+import spacy
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from PyPDF2 import PdfReader
 from docx import Document
 from fpdf import FPDF
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import google.generativeai as genai
-import google.api_core.exceptions
-import logging
-import webbrowser  # Add this import
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+import webbrowser
 
 # Fetch API key from Streamlit Secrets
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
@@ -24,7 +28,33 @@ if not GEMINI_API_KEY:
 else:
     genai.configure(api_key=GEMINI_API_KEY)
 
-# Utility Imports
+import google.api_core.exceptions  # Add this import
+
+# Verify model name and ensure it is accessible
+try:
+    model = genai.GenerativeModel("correct-model-name")  # Replace with the correct model name
+except google.api_core.exceptions.NotFound as e:
+    st.error("⚠ Model not found. Please check the model name and API key.")
+    st.stop()
+except google.api_core.exceptions.PermissionDenied as e:
+    st.error("⚠ Permission denied. Please check your API key permissions.")
+    st.stop()
+except google.api_core.exceptions.InvalidArgument as e:
+    st.error("⚠ Invalid argument. Please check the model name and API key.")
+    st.stop()
+except Exception as e:
+    st.error(f"⚠ An unexpected error occurred: {e}")
+    st.stop()
+
+def chat_with_gemini(prompt):
+    try:
+        response = model.generate_content(prompt)
+        return response.text if response else "No response received."
+    except google.api_core.exceptions.NotFound as e:
+        st.error("⚠ Model not found. Please check the model name and API key.")
+        return "Model not found."
+
+# Your other code remains the same
 import asyncio
 
 try:
@@ -32,24 +62,51 @@ try:
 except RuntimeError:
     asyncio.run(asyncio.sleep(0))  # ✅ Ensure a running event loop
 
-def chat_with_gemini(prompt):
-    try:
-        response = genai.generate_text(prompt=prompt)  # Use the correct method for generating responses
-        return response
-    except google.api_core.exceptions.GoogleAPIError as e:
-        if e.code == 404:
-            st.error("API Error: 404 Requested entity was not found. Please check the API endpoint and resource.")
-            logging.error("API Error: 404 Requested entity was not found. Please check the API endpoint and resource.")
-        else:
-            st.error(f"API Error: {e.code} {e.message}")
-            logging.error(f"API Error: {e.code} {e.message}")
-        return None
-    except Exception as e:
-        st.error(f"An unexpected error occurred: {e}")
-        logging.error(f"An unexpected error occurred: {e}")
-        return None
+# UI Improvements
+st.set_page_config(page_title="AI Resume Reviewer", page_icon="📄", layout="wide")
+st.title("🚀AI ResumeXpert Analyst 🤖")
+st.markdown("Upload your resume to get detailed AI feedback, ATS analysis, and job match insights!🧠")
+st.caption("📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻")
 
-# Function to extract text from uploaded files
+AI_path = "AI.png"  # Ensure this file is in the same directory as your script
+try:
+    st.sidebar.image(AI_path)
+except FileNotFoundError:
+    st.sidebar.warning("AI.png file not found. Please check the file path.")
+
+image_path = "image.png"  # Ensure this file is in the same directory as your script
+try:
+    st.sidebar.image(image_path)
+except FileNotFoundError:
+    st.sidebar.warning("image.png file not found. Please check the file path.")
+
+# Sidebar Navigation
+with st.sidebar:
+    st.header("⚙️ App Features")
+
+    tab_selection = st.radio("Select a Feature:", [
+        "📄 Resume Analysis",
+        "📊 ATS Score & Fixes",
+        "💼 Job Fit Analysis",
+        "🚀 AI Project Suggestions",
+        "💡 Best Career Path",
+        "🛠️ Missing Skills & Learning Guide",
+        "🎓 Certifications & Courses",
+        "💰 Expected Salaries & Job Roles",
+        "📊 AI Resume Ranking",
+        "🔍 Personalized Job Alerts",
+        "✉️ AI Cover Letter Generator",
+        "🎤 AI Mock Interviews"
+    ])
+
+    st.markdown("👨👨‍💻Developer:- Abhishek❤️Yadav")
+    
+    developer_path = "my.jpg"  # Ensure this file is in the same directory as your script
+    try:
+        st.sidebar.image(developer_path)
+    except FileNotFoundError:
+        st.sidebar.warning("my.jpg file not found. Please check the file path.")
+
 def extract_text(file):
     if file.name.endswith(".pdf"):
         pdf_reader = PdfReader(file)
@@ -60,7 +117,6 @@ def extract_text(file):
     else:
         return "❌ Unsupported file format. Upload a PDF or DOCX."
 
-# Function to analyze resume
 def analyze_resume(text):
     prompt = f"""
     You are an expert AI Resume Reviewer. Analyze the following resume thoroughly and provide structured insights on:
@@ -76,7 +132,23 @@ def analyze_resume(text):
     """
     return chat_with_gemini(prompt)
 
-# Your other code remains the same
+def match_job_description(resume_text, job_desc):
+    prompt = f"""
+    You are an AI Job Fit Analyzer. Compare the given resume with the provided job description and generate a structured report:
+    
+    ✅ *Matching Skills:* Identify skills in the resume that match the job description.
+    ❌ *Missing Skills:* Highlight missing key skills that the candidate needs to acquire.
+    📊 *Fit Percentage:* Provide a percentage match score based on skillset, experience, and qualifications.
+    🏆 *Final Verdict:* Clearly state whether the candidate is a "Good Fit" or "Needs Improvement" with reasons.
+    
+    Resume:
+    {resume_text}
+    
+    Job Description:
+    {job_desc}
+    """
+    return chat_with_gemini(prompt)
+
 def get_resume_score(resume_text):
     prompt = f"""
     As an AI Resume Scorer, evaluate the resume across different factors and provide a structured breakdown:
@@ -116,40 +188,10 @@ def create_pdf(text, filename="Optimized_Resume.pdf"):
     c.save()
     return filename
 
-# UI Improvements
-st.set_page_config(page_title="AI Resume Reviewer", page_icon="📄", layout="wide")
-st.title("🚀AI ResumeXpert Analyst 🤖")
-st.markdown("Upload your resume to get detailed AI feedback, ATS analysis, and job match insights!🧠")
-st.caption("📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻")
-
-# Sidebar Navigation
-with st.sidebar:
-    st.header("⚙️ App Features")
-    tab_selection = st.radio("Select a Feature:", [
-        "📄 Resume Analysis",
-        "📊 ATS Score & Fixes",
-        "💼 Job Fit Analysis",
-        "🚀 AI Project Suggestions",
-        "💡 Best Career Path",
-        "🛠️ Missing Skills & Learning Guide",
-        "🎓 Certifications & Courses",
-        "💰 Expected Salaries & Job Roles",
-        "📊 AI Resume Ranking",
-        "🔍 Personalized Job Alerts",
-        "✉️ AI Cover Letter Generator",
-        "🎤 AI Mock Interviews"
-    ])
-    st.markdown("👨👨‍💻Developer:- Abhishek❤️Yadav")
-
-    developer_path = "my.jpg"  # Ensure this file is in the same directory as your script
-    try:
-        st.sidebar.image(developer_path)
-    except FileNotFoundError:
-        st.sidebar.warning("my.jpg file not found. Please check the file path.")
-
-# Tab 1: Resume Upload and Analysis
+# Create Section-wise Tabs
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["📂 Upload Resume", "📊 Job Match Analysis", "🚀 AI Project Suggestions", "🤷‍♂ ATS Score Checker", "📊 AI-Powered Resume Ranking"])
 
+# Tab 1: Resume Upload and Analysis
 with tab1:
     uploaded_file = st.file_uploader("Upload Resume (PDF/DOCX)", type=["pdf", "docx"])
     if uploaded_file:
@@ -177,23 +219,6 @@ with tab2:
     job_desc = st.text_area("📌 Paste Job Description Here:")
     if job_desc:
         st.write("🔍 Analyzing job fit...")
-        # Function to match job description with resume
-        def match_job_description(resume_text, job_desc):
-            prompt = f"""
-            You are an AI Job Fit Analyzer. Based on the resume and job description below, analyze the fit:
-        
-            ✅ *Skills Match*: How well do the resume skills align with the job requirements?
-            ✅ *Experience Match*: How relevant is the candidate's experience to the job role?
-            ✅ *Overall Fit*: Provide a score out of 100 and a brief analysis.
-        
-            Resume:
-            {resume_text}
-        
-            Job Description:
-            {job_desc}
-            """
-            return chat_with_gemini(prompt)
-        
         job_fit_feedback = match_job_description(resume_text, job_desc)
         st.subheader("📊 Job Fit Analysis")
         st.write(job_fit_feedback)
@@ -208,6 +233,7 @@ def suggest_projects(resume_text):
     *Advanced Level (For Experts)*: 5 complex projects showcasing deep skills.  
     
     🔹 *For Each Project:* Provide a *brief description* and the *required tech stack (tools, frameworks, technologies).*  
+    🔹 *Make sure the projects align with the user's skills, experience, and domain.*  
     
     Resume:
     {resume_text}
@@ -275,7 +301,7 @@ with tab5:
     if uploaded_files:
         resume_texts = []
         file_names = []
-
+        
         for file in uploaded_files:
             text = extract_text(file)  # Function to extract text from PDF/DOCX
             if text.startswith("❌"):  # Error handling
@@ -287,7 +313,7 @@ with tab5:
         if len(resume_texts) > 0:
             if st.button("🚀 Rank Resumes"):  # Button to rank resumes
                 ranked_resumes = []
-
+                
                 for i, text in enumerate(resume_texts):
                     rank_prompt = f"""
                     You are an AI Resume Evaluator. Assess the following resume based on:
@@ -418,9 +444,9 @@ with tab9:
                 """
                 return chat_with_gemini(prompt)
 
-            salary_and_job_insights = get_salary_and_jobs(resume_text)
-            st.write(salary_and_job_insights)
-               
+            salary_and_jobs = get_salary_and_jobs(resume_text)
+            st.write(salary_and_jobs)
+
 
 # Tab 10: Interactive Resume Q&A
 with tab10:
@@ -449,7 +475,6 @@ with tab10:
                 st.write("💡 *AI Response:*")
                 st.write(response)
 
-
 # Tab 11: Personalized Job Alerts
 with tab11:
     st.subheader("🔔 Personalized Job Alerts")
@@ -457,7 +482,7 @@ with tab11:
     # Input fields for user preferences
     job_title = st.text_input("🎯 Enter Job Title (e.g., Data Scientist, Software Engineer)")
     location = st.text_input("📍 Preferred Location (e.g., Remote, New York, Bangalore)")
-
+    
     if st.button("🔍 Find Jobs Now"):
         if job_title and location:
             st.success(f"🔗 Here are job links for **{job_title}** in **{location}**:")
@@ -466,6 +491,7 @@ with tab11:
             indeed_url = f"https://www.indeed.com/jobs?q={job_title.replace(' ', '+')}&l={location.replace(' ', '+')}"
             linkedin_url = f"https://www.linkedin.com/jobs/search?keywords={job_title.replace(' ', '%20')}&location={location.replace(' ', '%20')}"
             naukri_url = f"https://www.naukri.com/{job_title.replace(' ', '-')}-jobs-in-{location.replace(' ', '-')}"
+
             google_jobs_url = f"https://www.google.com/search?q={job_title.replace(' ', '+')}+jobs+in+{location.replace(' ', '+')}"
 
             # Display clickable job links
