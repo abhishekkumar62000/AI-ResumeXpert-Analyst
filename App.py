@@ -38,8 +38,12 @@ def chat_with_gemini(prompt):
         response = genai.generate_text(prompt=prompt)  # Use the correct method for generating responses
         return response
     except google.api_core.exceptions.GoogleAPIError as e:
-        st.error(f"API Error: {e.code} {e.message}")
-        logging.error(f"API Error: {e.code} {e.message}")
+        if e.code == 404:
+            st.error("API Error: 404 Requested entity was not found. Please check the API endpoint and resource.")
+            logging.error("API Error: 404 Requested entity was not found. Please check the API endpoint and resource.")
+        else:
+            st.error(f"API Error: {e.code} {e.message}")
+            logging.error(f"API Error: {e.code} {e.message}")
         return None
     except Exception as e:
         st.error(f"An unexpected error occurred: {e}")
