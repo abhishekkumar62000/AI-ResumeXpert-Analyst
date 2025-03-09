@@ -53,6 +53,15 @@ def chat_with_gemini(prompt):
     except google.api_core.exceptions.NotFound as e:
         st.error("⚠ Model not found. Please check the model name and API key.")
         return "Model not found."
+    except google.api_core.exceptions.PermissionDenied as e:
+        st.error("⚠ Permission denied. Please check your API key permissions.")
+        return "Permission denied."
+    except google.api_core.exceptions.InvalidArgument as e:
+        st.error("⚠ Invalid argument. Please check the model name and API key.")
+        return "Invalid argument."
+    except Exception as e:
+        st.error(f"⚠ An unexpected error occurred: {e}")
+        return f"An unexpected error occurred: {e}"
 
 # Your other code remains the same
 import asyncio
