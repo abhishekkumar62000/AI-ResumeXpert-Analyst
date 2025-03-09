@@ -38,8 +38,12 @@ def chat_with_gemini(prompt):
         response = genai.generate_text(prompt=prompt)  # Use the correct method for generating responses
         return response
     except google.api_core.exceptions.GoogleAPIError as e:
-        st.error(f"API Error: {e}")
-        logging.error(f"API Error: {e}")
+        st.error(f"API Error: {e.code} {e.message}")
+        logging.error(f"API Error: {e.code} {e.message}")
+        return None
+    except Exception as e:
+        st.error(f"An unexpected error occurred: {e}")
+        logging.error(f"An unexpected error occurred: {e}")
         return None
 
 # Function to extract text from uploaded files
@@ -413,6 +417,7 @@ with tab9:
 
             salary_and_job_insights = get_salary_and_jobs(resume_text)
             st.write(salary_and_job_insights)
+               
 
 # Tab 10: Interactive Resume Q&A
 with tab10:
