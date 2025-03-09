@@ -30,12 +30,19 @@ else:
 
 import google.api_core.exceptions  # Add this import
 
-# Verify model name and ensure it is accessible
+# List available models to verify the model name
 try:
-    model = genai.GenerativeModel("correct-model-name")  # Replace with the correct model name
-except google.api_core.exceptions.NotFound as e:
-    st.error("⚠ Model not found. Please check the model name and API key.")
-    st.stop()
+    available_models = genai.list_models()
+    model_names = [model.name for model in available_models]
+    st.write("Available models:", model_names)
+    
+    # Verify if the desired model is in the list
+    desired_model_name = "correct-model-name"  # Replace with the correct model name
+    if desired_model_name in model_names:
+        model = genai.GenerativeModel(desired_model_name)
+    else:
+        st.error(f"⚠ Model '{desired_model_name}' not found. Available models: {model_names}")
+        st.stop()
 except google.api_core.exceptions.PermissionDenied as e:
     st.error("⚠ Permission denied. Please check your API key permissions.")
     st.stop()
