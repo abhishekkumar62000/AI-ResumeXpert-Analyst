@@ -510,6 +510,7 @@ with tab11:
 
             google_jobs_url = f"https://www.google.com/search?q={job_title.replace(' ', '+')}+jobs+in+{location.replace(' ', '+')}"
 
+
             # Display clickable job links
             st.markdown(f"[🟢 Indeed Jobs]({indeed_url})")
             st.markdown(f"[🔵 LinkedIn Jobs]({linkedin_url})")
