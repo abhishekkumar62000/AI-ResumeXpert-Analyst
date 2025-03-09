@@ -24,6 +24,20 @@ if not GEMINI_API_KEY:
 else:
     genai.configure(api_key=GEMINI_API_KEY)
 
+
+import google.generativeai as genai
+
+API_KEY = "AIzaSyB5K03NQmrg38rla3Dh1sNLJ_wvCh2bYHU"
+genai.configure(api_key=API_KEY)
+
+try:
+    model = genai.GenerativeModel('gemini-pro')
+    response = model.generate_content("Hello, world!")
+    print(response.text)
+except Exception as e:
+    print("Error:", e)
+
+
 # Utility Imports
 import asyncio
 
