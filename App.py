@@ -32,7 +32,6 @@ try:
 except RuntimeError:
     asyncio.run(asyncio.sleep(0))  # ✅ Ensure a running event loop
 
-# Function to handle API calls
 def chat_with_gemini(prompt):
     try:
         response = genai.generate_text(prompt=prompt)  # Use the correct method for generating responses
