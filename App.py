@@ -1,23 +1,11 @@
 #Import Important Library
 import streamlit as st
-import os
-import faiss
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import nltk
-import spacy
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from PyPDF2 import PdfReader
-from docx import Document
-from fpdf import FPDF
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 import google.generativeai as genai
 import webbrowser
+from PyPDF2 import PdfReader
+from docx import Document
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 # Fetch API key from Streamlit Secrets
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
@@ -507,9 +495,7 @@ with tab11:
             indeed_url = f"https://www.indeed.com/jobs?q={job_title.replace(' ', '+')}&l={location.replace(' ', '+')}"
             linkedin_url = f"https://www.linkedin.com/jobs/search?keywords={job_title.replace(' ', '%20')}&location={location.replace(' ', '%20')}"
             naukri_url = f"https://www.naukri.com/{job_title.replace(' ', '-')}-jobs-in-{location.replace(' ', '-')}"
-
             google_jobs_url = f"https://www.google.com/search?q={job_title.replace(' ', '+')}+jobs+in+{location.replace(' ', '+')}"
-
 
             # Display clickable job links
             st.markdown(f"[🟢 Indeed Jobs]({indeed_url})")
