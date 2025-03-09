@@ -25,7 +25,7 @@ try:
     st.write("Available models:", model_names)
     
     # Verify if the desired model is in the list
-    desired_model_name = "correct-model-name"  # Replace with the correct model name
+    desired_model_name = "models/gemini-1.5-flash-latest"  # Replace with the correct model name
     if desired_model_name in model_names:
         model = genai.GenerativeModel(desired_model_name)
     else:
