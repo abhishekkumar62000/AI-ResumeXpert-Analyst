@@ -221,7 +221,7 @@ with tab1:
 # Tab 2: Job Match Analysis
 with tab2:
     job_desc = st.text_area("📌 Paste Job Description Here:")
-    if job_desc:
+    if job_desc and 'resume_text' in locals():
         st.write("🔍 Analyzing job fit...")
         job_fit_feedback = match_job_description(resume_text, job_desc)
         st.subheader("📊 Job Fit Analysis")
@@ -247,8 +247,7 @@ def suggest_projects(resume_text):
 # Tab 3: AI Project Suggestions
 with tab3:
     st.subheader("🚀 AI-Powered Project Suggestions")
-    if uploaded_file:
-        resume_text = extract_text(uploaded_file)  # Ensure resume_text is defined
+    if uploaded_file and 'resume_text' in locals():
         if st.button("📌 Get Project Ideas Based on Resume"):
             project_suggestions = suggest_projects(resume_text)
             st.write(project_suggestions)
@@ -284,7 +283,7 @@ def check_ats_score(resume_text):
 with tab4:
     st.subheader("🤷‍♂ ATS Score Checker")
     
-    if uploaded_file:
+    if uploaded_file and 'resume_text' in locals():
         if st.button("🔍 Check ATS Score"):
             ats_score, ats_feedback = check_ats_score(resume_text)
             st.markdown(f"### ✅ Your ATS Score: *{ats_score}/100*")
@@ -359,7 +358,7 @@ tab6, tab7, tab8, tab9, tab10, tab11, tab12 = st.tabs([
 # Tab 6: Best Career Path
 with tab6:
     st.subheader("💡 AI Career Roadmap & Skills Guide")
-    if uploaded_file:
+    if uploaded_file and 'resume_text' in locals():
         if st.button("🚀 Get Career Insights"):
             def generate_career_roadmap(resume_text):
                 prompt = f"""
@@ -384,7 +383,7 @@ with tab6:
 # Tab 7: Missing Skills
 with tab7:
     st.subheader("🛠 Missing Skills & How to Learn Them")
-    if uploaded_file:
+    if uploaded_file and 'resume_text' in locals():
         if st.button("📚 Identify Missing Skills"):
             def find_missing_skills(resume_text):
                 prompt = f"""
@@ -406,7 +405,7 @@ with tab7:
 # Tab 8: Certifications & Courses
 with tab8:
     st.subheader("📜 Certifications & Course Recommendations")
-    if uploaded_file:
+    if uploaded_file and 'resume_text' in locals():
         if st.button("🎓 Get Course Recommendations"):
             def recommend_certifications(resume_text):
                 prompt = f"""
@@ -428,7 +427,7 @@ with tab8:
 # Tab 9: Expected Salaries & Job Roles
 with tab9:
     st.subheader("💰 Expected Salaries & Job Roles")
-    if uploaded_file:
+    if uploaded_file and 'resume_text' in locals():
         if st.button("💼 Get Salary & Job Role Insights"):
             def get_salary_and_jobs(resume_text):
                 prompt = f"""
