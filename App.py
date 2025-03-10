@@ -1,4 +1,4 @@
-#Import Important Library
+# Import Important Library
 import streamlit as st
 import google.generativeai as genai
 import webbrowser
@@ -25,7 +25,6 @@ import google.api_core.exceptions  # Add this import
 try:
     available_models = genai.list_models()
     model_names = [model.name for model in available_models]
-    st.write("Available models:", model_names)
     
     # Verify if the desired model is in the list
     desired_model_name = "models/gemini-1.5-flash-latest"  # Replace with the correct model name
