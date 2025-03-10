@@ -7,6 +7,9 @@ from docx import Document
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
+# Set page configuration
+st.set_page_config(page_title="AI Resume Reviewer", page_icon="📄", layout="wide")
+
 # Fetch API key from Streamlit Secrets
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
@@ -67,7 +70,6 @@ except RuntimeError:
     asyncio.run(asyncio.sleep(0))  # ✅ Ensure a running event loop
 
 # UI Improvements
-st.set_page_config(page_title="AI Resume Reviewer", page_icon="📄", layout="wide")
 st.title("🚀AI ResumeXpert Analyst 🤖")
 st.markdown("Upload your resume to get detailed AI feedback, ATS analysis, and job match insights!🧠")
 st.caption("📝 Rewrite. 🚀 Rank. 🎯 Recruit – AI ResumeXpert at Your Service!👨‍💻")
