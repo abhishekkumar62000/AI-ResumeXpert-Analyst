@@ -90,18 +90,18 @@ with st.sidebar:
     st.header("⚙️ App Features")
 
     tab_selection = st.radio("Select a Feature:", [
-        "📄 Resume Analysis",
-        "📊 ATS Score & Fixes",
-        "💼 Job Fit Analysis",
+        "📂 Upload Resume",
+        "📊 Job Match Analysis",
         "🚀 AI Project Suggestions",
-        "💡 Best Career Path",
-        "🛠️ Missing Skills & Learning Guide",
-        "🎓 Certifications & Courses",
+        "🤷‍♂ ATS Score Checker",
+        "📊 AI-Powered Resume Ranking",
+        "💡 AI Career Roadmap & Skills Guide",
+        "🛠 Missing Skills & How to Learn Them",
+        "📜 Certifications & Course Recommendations",
         "💰 Expected Salaries & Job Roles",
-        "📊 AI Resume Ranking",
-        "🔍 Personalized Job Alerts",
-        "✉️ AI Cover Letter Generator",
-        "🎤 AI Mock Interviews"
+        "📢 Resume Feedback via AI Chat",
+        "📢 Personalized Job Alerts",
+        "💡 Soft Skills Analysis & Improvement"
     ])
 
     st.markdown("👨👨‍💻Developer:- Abhishek❤️Yadav")
@@ -194,15 +194,15 @@ def create_pdf(text, filename="Optimized_Resume.pdf"):
     return filename
 
 # Create Section-wise Tabs
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["📂 Upload Resume", "📊 Job Match Analysis", "🚀 AI Project Suggestions", "🤷‍♂ ATS Score Checker", "📊 AI-Powered Resume Ranking"])
+uploaded_file = st.file_uploader("Upload Resume (PDF/DOCX)", type=["pdf", "docx"])
+resume_text = None
+if uploaded_file:
+    resume_text = extract_text(uploaded_file)
+    st.success("✅ Resume Uploaded Successfully!")
 
-# Tab 1: Resume Upload and Analysis
-with tab1:
-    uploaded_file = st.file_uploader("Upload Resume (PDF/DOCX)", type=["pdf", "docx"])
+if tab_selection == "📂 Upload Resume":
+    st.subheader("📂 Upload Resume")
     if uploaded_file:
-        st.success("✅ Resume Uploaded Successfully!")
-        resume_text = extract_text(uploaded_file)
-        
         # AI Resume Analysis
         feedback = analyze_resume(resume_text)
         score_feedback = get_resume_score(resume_text)
@@ -219,73 +219,54 @@ with tab1:
             st.success("🎉 Resume Improved Successfully!")
             st.download_button("⬇ Download Optimized Resume", open(updated_pdf, "rb"), file_name="Optimized_Resume.pdf")
 
-# Tab 2: Job Match Analysis
-with tab2:
+elif tab_selection == "📊 Job Match Analysis":
+    st.subheader("📊 Job Match Analysis")
     job_desc = st.text_area("📌 Paste Job Description Here:")
-    if job_desc and 'resume_text' in locals():
+    if job_desc and resume_text:
         st.write("🔍 Analyzing job fit...")
         job_fit_feedback = match_job_description(resume_text, job_desc)
         st.subheader("📊 Job Fit Analysis")
         st.write(job_fit_feedback)
 
-# Function to Generate AI-Based Project Suggestions (5 per level)
-def suggest_projects(resume_text):
-    prompt = f"""
-    You are a project mentor Expert. Based on the resume below, suggest 5 projects for each level:
-    
-    *Basic Level (For Beginners)*: 5 easy projects to get started.  
-    *Intermediate Level (For Practitioners)*: 5 projects requiring more expertise.  
-    *Advanced Level (For Experts)*: 5 complex projects showcasing deep skills.  
-    
-    🔹 *For Each Project:* Provide a *brief description* and the *required tech stack (tools, frameworks, technologies).*  
-    🔹 *Make sure the projects align with the user's skills, experience, and domain.*  
-    
-    Resume:
-    {resume_text}
-    """
-    return chat_with_gemini(prompt)
-
-# Tab 3: AI Project Suggestions
-with tab3:
+elif tab_selection == "🚀 AI Project Suggestions":
     st.subheader("🚀 AI-Powered Project Suggestions")
-    if uploaded_file and 'resume_text' in locals():
+    if resume_text:
         if st.button("📌 Get Project Ideas Based on Resume"):
+            def suggest_projects(resume_text):
+                prompt = f"""
+                You are an AI Project Advisor. Based on the following resume, suggest relevant AI projects:
+
+                ✅ *Project Ideas*: List 3-5 project ideas that align with the user's skills and experience.
+                🔧 *Project Details*: Provide a brief description and key objectives for each project.
+                📈 *Skill Development*: Explain how each project will help in skill enhancement and career growth.
+
+                Resume:
+                {resume_text}
+                """
+                return chat_with_gemini(prompt)
+
             project_suggestions = suggest_projects(resume_text)
             st.write(project_suggestions)
 
-# Function to Calculate ATS Score & Provide Feedback
-def check_ats_score(resume_text):
-    prompt = f"""
-    You are an ATS resume evaluator. Based on the resume below, analyze its ATS compatibility on a scale of 100. 
-    
-    *Scoring Criteria:*  
-    - ✅ Proper Formatting & Readability (20%)  
-    - ✅ Use of Correct Keywords (30%)  
-    - ✅ Section Organization (20%)  
-    - ✅ No Unnecessary Graphics or Tables (15%)  
-    - ✅ Proper Contact Info & Structure (15%)  
-    
-    *Provide Output as:*  
-    - *ATS Score (out of 100)*
-    - *Improvement Suggestions to improve 100 ATS Score*
-    
-    Resume:
-    {resume_text}
-    """
-    response = chat_with_gemini(prompt)
-    try:
-        ats_score = int(response.split("ATS Score:")[1].split("/100")[0].strip())
-    except (IndexError, ValueError):
-        ats_score = 0  # Default to 0 if parsing fails
-    ats_feedback = response.split("Improvement Suggestions to improve 100 ATS Score")[1].strip() if "Improvement Suggestions to improve 100 ATS Score" in response else "No feedback available."
-    return ats_score, ats_feedback
-
-# Tab 4: ATS Score Checker
-with tab4:
+elif tab_selection == "🤷‍♂ ATS Score Checker":
     st.subheader("🤷‍♂ ATS Score Checker")
-    
-    if uploaded_file and 'resume_text' in locals():
+    if resume_text:
         if st.button("🔍 Check ATS Score"):
+            def check_ats_score(resume_text):
+                prompt = f"""
+                You are an AI ATS Score Checker. Analyze the following resume for ATS compliance and provide a score:
+
+                ✅ *ATS Compatibility*: Score out of 100 based on keyword optimization, formatting, and readability.
+                ❌ *Areas for Improvement*: Highlight specific issues that need to be addressed for better ATS compliance.
+                
+                Resume:
+                {resume_text}
+                """
+                response = chat_with_gemini(prompt)
+                score = int(response.split("Score:")[-1].split("/")[0].strip())
+                feedback = response.split("Areas for Improvement:")[-1].strip()
+                return score, feedback
+
             ats_score, ats_feedback = check_ats_score(resume_text)
             st.markdown(f"### ✅ Your ATS Score: *{ats_score}/100*")
             if ats_score < 80:
@@ -294,28 +275,23 @@ with tab4:
             else:
                 st.success("🎉 Your resume is ATS-friendly!")
 
-# Tab 5: AI-Powered Resume Ranking
-with tab5:
+elif tab_selection == "📊 AI-Powered Resume Ranking":
     st.subheader("📊 AI-Powered Resume Ranking")
-
-    # Upload multiple resume files
     uploaded_files = st.file_uploader("Upload Multiple Resumes (PDF/DOCX)", type=["pdf", "docx"], accept_multiple_files=True)
-
-    # Process resumes if uploaded
     if uploaded_files:
         resume_texts = []
         file_names = []
         
         for file in uploaded_files:
-            text = extract_text(file)  # Function to extract text from PDF/DOCX
-            if text.startswith("❌"):  # Error handling
+            text = extract_text(file)
+            if text.startswith("❌"):
                 st.error(f"❌ Unable to process: {file.name}")
             else:
                 resume_texts.append(text)
                 file_names.append(file.name)
 
         if len(resume_texts) > 0:
-            if st.button("🚀 Rank Resumes"):  # Button to rank resumes
+            if st.button("🚀 Rank Resumes"):
                 ranked_resumes = []
                 
                 for i, text in enumerate(resume_texts):
@@ -330,36 +306,22 @@ with tab5:
                     Resume:
                     {text}
                     """
-                    score_response = chat_with_gemini(rank_prompt)  # AI function to analyze resume
+                    score_response = chat_with_gemini(rank_prompt)
                     try:
-                        score = int(score_response.split("Score:")[-1].split("/")[0].strip())  # Extract score
+                        score = int(score_response.split("Score:")[-1].split("/")[0].strip())
                     except (IndexError, ValueError):
-                        score = 0  # Default to 0 if parsing fails
+                        score = 0
                     ranked_resumes.append((file_names[i], score))
 
-                # Sort resumes by score (Highest to Lowest)
                 ranked_resumes.sort(key=lambda x: x[1], reverse=True)
 
-                # Display ranked results
                 st.subheader("🏆 Ranked Resumes")
                 for i, (name, score) in enumerate(ranked_resumes, start=1):
                     st.write(f"**{i}. {name}** - **Score: {score}/100**")
 
-# Creating multiple tabs together
-tab6, tab7, tab8, tab9, tab10, tab11, tab12 = st.tabs([
-    "💡 AI Career Roadmap & Skills Guide",
-    "🛠 Missing Skills & How to Learn Them",
-    "📜 Certifications & Course Recommendations",
-    "💰 Expected Salaries & Job Roles",
-    "📢 Resume Feedback via AI Chat",
-    "📢 Personalized Job Alerts",
-    "💡 Soft Skills Analysis & Improvement"
-])
-
-# Tab 6: Best Career Path
-with tab6:
+elif tab_selection == "💡 AI Career Roadmap & Skills Guide":
     st.subheader("💡 AI Career Roadmap & Skills Guide")
-    if uploaded_file and 'resume_text' in locals():
+    if resume_text:
         if st.button("🚀 Get Career Insights"):
             def generate_career_roadmap(resume_text):
                 prompt = f"""
@@ -381,10 +343,9 @@ with tab6:
             career_guidance = generate_career_roadmap(resume_text)
             st.write(career_guidance)
 
-# Tab 7: Missing Skills
-with tab7:
+elif tab_selection == "🛠 Missing Skills & How to Learn Them":
     st.subheader("🛠 Missing Skills & How to Learn Them")
-    if uploaded_file and 'resume_text' in locals():
+    if resume_text:
         if st.button("📚 Identify Missing Skills"):
             def find_missing_skills(resume_text):
                 prompt = f"""
@@ -403,10 +364,9 @@ with tab7:
             missing_skills = find_missing_skills(resume_text)
             st.write(missing_skills)
 
-# Tab 8: Certifications & Courses
-with tab8:
+elif tab_selection == "📜 Certifications & Course Recommendations":
     st.subheader("📜 Certifications & Course Recommendations")
-    if uploaded_file and 'resume_text' in locals():
+    if resume_text:
         if st.button("🎓 Get Course Recommendations"):
             def recommend_certifications(resume_text):
                 prompt = f"""
@@ -425,10 +385,9 @@ with tab8:
             courses = recommend_certifications(resume_text)
             st.write(courses)
 
-# Tab 9: Expected Salaries & Job Roles
-with tab9:
+elif tab_selection == "💰 Expected Salaries & Job Roles":
     st.subheader("💰 Expected Salaries & Job Roles")
-    if uploaded_file and 'resume_text' in locals():
+    if resume_text:
         if st.button("💼 Get Salary & Job Role Insights"):
             def get_salary_and_jobs(resume_text):
                 prompt = f"""
@@ -451,13 +410,11 @@ with tab9:
             salary_and_jobs = get_salary_and_jobs(resume_text)
             st.write(salary_and_jobs)
 
-
-# Tab 10: Interactive Resume Q&A
-with tab10:
+elif tab_selection == "📢 Resume Feedback via AI Chat":
     st.subheader("📢 Ask AI About Your Resume")
     st.markdown("💬 Type any question about your resume, and AI will provide detailed guidance!")
 
-    if uploaded_file:
+    if resume_text:
         user_question = st.text_input("❓ Ask anything about your resume:")
         
         if user_question:
@@ -479,11 +436,9 @@ with tab10:
                 st.write("💡 *AI Response:*")
                 st.write(response)
 
-# Tab 11: Personalized Job Alerts
-with tab11:
+elif tab_selection == "📢 Personalized Job Alerts":
     st.subheader("🔔 Personalized Job Alerts")
 
-    # Input fields for user preferences
     job_title = st.text_input("🎯 Enter Job Title (e.g., Data Scientist, Software Engineer)")
     location = st.text_input("📍 Preferred Location (e.g., Remote, New York, Bangalore)")
     
@@ -491,19 +446,16 @@ with tab11:
         if job_title and location:
             st.success(f"🔗 Here are job links for **{job_title}** in **{location}**:")
 
-            # Dynamic job search URLs
             indeed_url = f"https://www.indeed.com/jobs?q={job_title.replace(' ', '+')}&l={location.replace(' ', '+')}"
             linkedin_url = f"https://www.linkedin.com/jobs/search?keywords={job_title.replace(' ', '%20')}&location={location.replace(' ', '%20')}"
             naukri_url = f"https://www.naukri.com/{job_title.replace(' ', '-')}-jobs-in-{location.replace(' ', '-')}"
             google_jobs_url = f"https://www.google.com/search?q={job_title.replace(' ', '+')}+jobs+in+{location.replace(' ', '+')}"
 
-            # Display clickable job links
             st.markdown(f"[🟢 Indeed Jobs]({indeed_url})")
             st.markdown(f"[🔵 LinkedIn Jobs]({linkedin_url})")
             st.markdown(f"[🟠 Naukri Jobs]({naukri_url})")
             st.markdown(f"[🔴 Google Jobs]({google_jobs_url})")
 
-            # Open default browser with job search links
             webbrowser.open(indeed_url)
             webbrowser.open(linkedin_url)
             webbrowser.open(naukri_url)
@@ -511,8 +463,7 @@ with tab11:
         else:
             st.error("⚠️ Please enter both job title and location to get job alerts.")
 
-# Tab 12: Soft Skills Analysis & Improvement Tips
-with tab12:
+elif tab_selection == "💡 Soft Skills Analysis & Improvement":
     st.subheader("💡 Soft Skills Analysis & Improvement")
 
     if uploaded_file:
