@@ -104,7 +104,7 @@ with st.sidebar:
         "🎤 AI Mock Interviews"
     ])
 
-    st.markdown("👨👨‍💻Developer:- Abhishek❤Yadav")
+    st.markdown("👨👨‍💻Developer:- Abhishek💖Yadav")
     
     developer_path = "pic.jpg"  # Ensure this file is in the same directory as your script
     try:
