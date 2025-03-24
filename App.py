@@ -106,11 +106,11 @@ with st.sidebar:
 
     st.markdown("👨👨‍💻Developer:- Abhishek❤Yadav")
     
-    developer_path = "my.jpg"  # Ensure this file is in the same directory as your script
+    developer_path = "pic.jpg"  # Ensure this file is in the same directory as your script
     try:
         st.sidebar.image(developer_path)
     except FileNotFoundError:
-        st.sidebar.warning("my.jpg file not found. Please check the file path.")
+        st.sidebar.warning("pic.jpg file not found. Please check the file path.")
 
 def extract_text(file):
     if file.name.endswith(".pdf"):
