@@ -6,9 +6,20 @@ from PyPDF2 import PdfReader
 from docx import Document
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
+import streamlit.components.v1 as components
 
-# Set page configuration
+# Set page configuration (must be the first Streamlit command)
 st.set_page_config(page_title="AI Resume Reviewer", page_icon="📄", layout="wide")
+
+# Embed Chatbase Chatbot
+chatbase_script = """
+<script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="bY0i_WqBGZxHKIOpFSAsS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
+"""
+
+# Display Chatbase Chatbot in Streamlit
+components.html(chatbase_script, height=600)
 
 # Fetch API key from Streamlit Secrets
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
@@ -104,13 +115,17 @@ with st.sidebar:
         "🎤 AI Mock Interviews"
     ])
 
-    st.markdown("👨👨‍💻Developer:- Abhishek💖Yadav")
+    st.markdown("👨👨‍💻Developer:- Abhishek❤Yadav")
     
-    developer_path = "pic.jpg"  # Ensure this file is in the same directory as your script
+    developer_path = "my.jpg"  # Ensure this file is in the same directory as your script
     try:
         st.sidebar.image(developer_path)
     except FileNotFoundError:
-        st.sidebar.warning("pic.jpg file not found. Please check the file path.")
+        st.sidebar.warning("my.jpg file not found. Please check the file path.")
+
+with st.sidebar:
+    st.header("💬 Chat with AI")
+    components.html(chatbase_script, height=600)
 
 def extract_text(file):
     if file.name.endswith(".pdf"):
