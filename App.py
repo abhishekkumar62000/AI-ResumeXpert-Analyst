@@ -1,4 +1,4 @@
-# Import Important Library
+# Import Important Libraries
 import streamlit as st
 import google.generativeai as genai
 import webbrowser
@@ -7,26 +7,22 @@ from docx import Document
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import streamlit.components.v1 as components
+from dotenv import load_dotenv  # Import dotenv
+import os
 
 # Set page configuration (must be the first Streamlit command)
 st.set_page_config(page_title="AI Resume Reviewer", page_icon="📄", layout="wide")
 
-# Embed Chatbase Chatbot
-chatbase_script = """
-<script>
-(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="bY0i_WqBGZxHKIOpFSAsS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
-</script>
-"""
+# Load environment variables from .env file
+load_dotenv()
 
-# Display Chatbase Chatbot in Streamlit
-components.html(chatbase_script, height=600)
-
+# Fetch API key from .env
 # Fetch API key from Streamlit Secrets
 GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
 # Ensure the API key is set
 if not GEMINI_API_KEY:
-    st.error("⚠ GEMINI API Key is missing. Set it in Streamlit Secrets!")
+    st.error("⚠ GEMINI API Key is missing. Set it in the .env file!")
 else:
     genai.configure(api_key=GEMINI_API_KEY)
 
@@ -122,10 +118,6 @@ with st.sidebar:
         st.sidebar.image(developer_path)
     except FileNotFoundError:
         st.sidebar.warning("my.jpg file not found. Please check the file path.")
-
-with st.sidebar:
-    st.header("💬 Chat with AI")
-    components.html(chatbase_script, height=600)
 
 def extract_text(file):
     if file.name.endswith(".pdf"):
@@ -548,3 +540,15 @@ with tab12:
             st.write(soft_skills_analysis)
     else:
         st.warning("Please upload a resume to analyze soft skills.")
+
+# Move the Chatbase Chatbot to the bottom of the script
+chatbase_script = """
+<script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="bY0i_WqBGZxHKIOpFSAsS";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+</script>
+"""
+
+# Display Chatbase Chatbot at the bottom of the app
+st.markdown("---")  # Add a horizontal line for separation
+st.header("💬 Chat with AI")
+components.html(chatbase_script, height=600)
