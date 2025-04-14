@@ -3,7 +3,7 @@ import streamlit as st
 import google.generativeai as genai
 import webbrowser
 from PyPDF2 import PdfReader
-from docx import Document
+from docx import Document 
 from reportlab.pdfgen import canvas 
 from reportlab.lib.pagesizes import letter
 import streamlit.components.v1 as components
