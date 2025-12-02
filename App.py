@@ -34,7 +34,7 @@ try:
     model_names = [model.name for model in available_models]
     
     # Verify if the desired model is in the list
-    desired_model_name = "models/gemini-1.5-flash-latest"  # Replace with the correct model name
+    desired_model_name = "models/gemini-2.5-flash"  # Replace with the correct model name
     if desired_model_name in model_names:
         model = genai.GenerativeModel(desired_model_name)
     else:
