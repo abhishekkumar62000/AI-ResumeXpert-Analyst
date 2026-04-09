@@ -1,5 +1,5 @@
 streamlit
-requests
+requests 
 langchain
 langchain-community
 faiss-cpu
