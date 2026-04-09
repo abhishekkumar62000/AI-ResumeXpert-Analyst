@@ -2,7 +2,7 @@ streamlit
 requests 
 langchain
 langchain-community
-faiss-cpu 
+faiss-cpu
 python-docx
 sentence-transformers
 pymupdf
